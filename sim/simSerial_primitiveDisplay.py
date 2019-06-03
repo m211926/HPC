@@ -64,7 +64,7 @@ class Lattice:
 		#index 6-12: get saturated
 		#index 13-24: gets ultra saturated
 		if self.state == 0:
-			if random.randint(1, 101) < 2:
+			if random.randint(1, 301) < 2:
 				self.future = 2
 			elif index < 7:
 				self.future = 0
@@ -78,9 +78,9 @@ class Lattice:
 		#index 0-2: future dries up
 		#else: stays saturated 
 		elif self.state == 1:
-			if random.randint(1, 101) < 2 or index > 17:
+			if random.randint(1, 301) < 2 or index > 17:
 				self.future = 3
-			elif index < 2:
+			elif index < 1:
 				self.future = 0
 			else:
 				self.future = 1
@@ -115,7 +115,7 @@ class Game:
 	def setup(self):
 		for i in range(self.size):
 			for j in range(self.size):
-				state = random.choice([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,3])
+				state = 0 #random.choice([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,3])
 				Lattice(i,j,state)
 		return
 	
