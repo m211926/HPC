@@ -1,4 +1,5 @@
 import random
+import numpy as np
 from array import *
 from matplotlib import pyplot as plt
 from math import ceil, floor, sqrt
@@ -40,7 +41,7 @@ class Lattice:
 		return a
 
 	def computeIndex(self, size):
-		a = neighbors(self, size)
+		a = self.neighbors(size)
 		index = 0
 		for z in a:
 			index += z.state
@@ -51,7 +52,7 @@ class Lattice:
 		self.future = 0
 		return
 
-	def stageNextState(self, index):
+	def stageNextState(self, index, size):
 		index = self.computeIndex(size)
 
 		#completely dry
@@ -70,7 +71,7 @@ class Lattice:
 				self.future = 3
 
 		#saturated with no water on top
-	   #1% chance of ultra saturation (gets rained on)
+	   	#1% chance of ultra saturation (gets rained on)
 		#index 0-2: future dries up
 		#else: stays saturated 
 		elif self.state == 1:
@@ -109,7 +110,7 @@ class Lattice:
 			else:
 				self.future = 0
 
-class game:
+class Game:
 	
 	def __init__(self, size, timeSteps):
 		self.size = size
@@ -127,14 +128,14 @@ class game:
 	def stage(self):
 		lattices = Lattice.dirt
 		for lattice in lattices:
-			index = self.computeIndex(size)
-			lattice.stageNextState(index)
+			index = lattice.computeIndex(self.size)
+			lattice.stageNextState(index, self.size)
 		return
 	
 	def update(self):
 		lattices = Lattice.dirt
 		for lattice in lattices:
-			lattice.update(self)
+			lattice.update()
 		return
 
 	def play(self):
@@ -142,6 +143,7 @@ class game:
 		for i in range(1, self.timeSteps):
 			self.stage()
 			self.update()
+			print("finished a step")
 		return
 
 	def results(self):
@@ -153,13 +155,15 @@ class game:
 
 a = Game(N, t)
 a.play()
-a.results()
-for j in range(t):
-	b = [] 
-	for i in range(size):
-		b.append([z[2][j] for z in a.results() if z[0] == i
-	plt.spy(b)
-	plt.savefig("time{j}.png")
+r = a.results()
+
+
+#for j in range(t):
+#	b = [] 
+#	for i in range(size):
+#		b.append([z[2][j] for z in a.results() if z[0] == i
+#	plt.spy(b)
+#	plt.savefig("time{" + j + "}.png")
 
 
 		
