@@ -9,12 +9,11 @@ from math import ceil, floor, sqrt
 
 pWidth = 500
 
-N = 50
-t = 2
+N = 20
+t = 2000
 
 class Lattice:
 	dirt = []
-
 	# states
  	# 0: dry
 	# 1: saturated on top, no water on top
@@ -59,16 +58,15 @@ class Lattice:
 
 	def stageNextState(self, index, size):
 		index = self.computeIndex(size)
-
 		#completely dry
 		#1% chance of getting rained on
-		#index 0-8: stays dry
-		#index 9-16: gets saturated
-		#index 17-24: gets ultra saturated
+		#index 0-6: stays dry
+		#index 6-12: get saturated
+		#index 13-24: gets ultra saturated
 		if self.state == 0:
 			if random.randint(1, 101) < 2:
 				self.future = 2
-			elif index < 9:
+			elif index < 7:
 				self.future = 0
 			elif index < 17:
 				self.future = 1
@@ -80,40 +78,31 @@ class Lattice:
 		#index 0-2: future dries up
 		#else: stays saturated 
 		elif self.state == 1:
-			if random.randint(1, 101) < 2:
+			if random.randint(1, 101) < 2 or index > 17:
 				self.future = 3
-			elif index < 3:
+			elif index < 2:
 				self.future = 0
 			else:
 				self.future = 1
 
 		#water on top with no saturation
-		#50% chance of getting evaporated
-		#30% chance of saturating earth
-		#5% chance of staying same (floats on top)
-		#15% chance of ultra saturation 
+		#40% chance of resting on top
+		#40% chance of saturating earth
+		#10% chance of drying up
 		elif self.state == 2:
-			r = random.randint(1,101)
-			if r < 51:
-				self.future = 0
-			elif r < 81:
-				self.future = 1
-			elif r < 86: 
-				self.future = 2
-			else: 
-				self.future = 3
+			r = random.choice([2, 2, 1, 1, 0])
+			self.future = r
+			
 
 		#saturated with water on top	
 		#index 0-16: future only saturated
 		#index 17-20: future same as present
 		#index 21-24: future dried up (erosion? washed away? doesn't make too much practical sense)
 		else:
-			if index < 17:
+			if index < 10:
 				self.future = 1
-			elif index < 21:
-				self.future = 3
 			else:
-				self.future = 0
+				self.future = 3
 
 class Game:
 	
@@ -126,7 +115,7 @@ class Game:
 	def setup(self):
 		for i in range(self.size):
 			for j in range(self.size):
-				state = random.choice([0,1,2,3])
+				state = random.choice([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,3])
 				Lattice(i,j,state)
 		return
 	
@@ -144,45 +133,44 @@ class Game:
 			lattice.update()
 		return
 
-	def play(self):
-		self.setup()
-		for i in range(1, self.timeSteps):
-			self.stage()
-			print("finished a stage")
-			self.update()
-			print("finished a step")
-		return
-
 	def printPointAt(self, ex, why):
-		#lattices = Lattice.dirt
 		for lattice in self.lattices:
 			if lattice.x == ex and lattice.y == why:
 				sys.stdout.write(str(lattice)) 
 				return
+	
+	def printBoard(self):
+		for y in range(self.size):
+			for x in range(self.size):
+				self.printPointAt(x,y)
+			print("")
 
-	def xResults(self):
+	def play(self):
+                self.setup()
+                for i in range(1, self.timeSteps):
+                        self.stage()
+                        self.update()
+                        self.printBoard()
+                        print("*" * self.size)
+                return
+
+	#def xResults(self):
 		#lattices = Lattice.dirt
-		a = [[z.x] for z in self.lattices]
-		return a
+		#a = [[z.x] for z in self.lattices]
+		#return a
 
-	def yResults(self):
+	#def yResults(self):
                 #lattices = Lattice.dirt
-                a = [[z.y] for z in self.lattices]
-                return a
+                #a = [[z.y] for z in self.lattices]
+                #return a
 
-	def stateResults(self):
+	#def stateResults(self):
                 #lattices = Lattice.dirt
-                a = [[z.state] for z in self.lattices]
-                return a
-
+                #a = [[z.state] for z in self.lattices]
+                #return a
 
 a = Game(N, t)
 a.play()
-
-for y in range(N):
-	for x in range(N):
-		a.printPointAt(x, y)
-	print("")
 
 			
 #x = a.xResults()
