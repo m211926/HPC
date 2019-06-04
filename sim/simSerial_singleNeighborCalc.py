@@ -38,16 +38,14 @@ class Lattice:
 		return str(self.state)
 
 	def calcNeighbors(self, size):
-		a = []
-		a.append(Lattice.dirt[(self.x - 1) % size][(self.y - 1) % size])
-		a.append(Lattice.dirt[(self.x - 1) % size][(self.y + 1) % size])
-		a.append(Lattice.dirt[(self.x + 1) % size][(self.y - 1) % size])
-		a.append(Lattice.dirt[(self.x + 1) % size][(self.y + 1) % size])
-		a.append(Lattice.dirt[(self.x - 1) % size][self.y])
-		a.append(Lattice.dirt[(self.x + 1) % size][self.y])
-		a.append(Lattice.dirt[self.x][(self.y + 1) % size])
-		a.append(Lattice.dirt[self.x][(self.y + 1) % size])
-		self.neighbors = a
+		self.neighbors.append(Lattice.dirt[(self.x - 1) % size][(self.y - 1) % size])
+		self.neighbors.append(Lattice.dirt[(self.x - 1) % size][(self.y + 1) % size])
+		self.neighbors.append(Lattice.dirt[(self.x + 1) % size][(self.y - 1) % size])
+		self.neighbors.append(Lattice.dirt[(self.x + 1) % size][(self.y + 1) % size])
+		self.neighbors.append(Lattice.dirt[(self.x - 1) % size][self.y])
+		self.neighbors.append(Lattice.dirt[(self.x + 1) % size][self.y])
+		self.neighbors.append(Lattice.dirt[self.x][(self.y + 1) % size])
+		self.neighbors.append(Lattice.dirt[self.x][(self.y + 1) % size])
 
 	def computeIndex(self, size):
 		index = 0
@@ -116,7 +114,7 @@ class Game:
 		return
 
 	def setup(self):
-		print("Initiallizing...")
+		print("Initializing...")
 		time.sleep(1)
 		for i in range(0, self.size):
 			temp = []
