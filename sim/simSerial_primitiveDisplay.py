@@ -9,7 +9,7 @@ from math import ceil, floor, sqrt
 
 pWidth = 500
 
-N = 18
+N = 50
 t = 2000
 
 class Lattice:
