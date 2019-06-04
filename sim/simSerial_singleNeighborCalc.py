@@ -9,10 +9,10 @@ from math import ceil, floor, sqrt
 #import plotly.tools as tls	
 
 N = 50
-t = 2000
+t = 500
 
 class Lattice:
-	#static array data structure for lattices
+	#static 2D array data structure for lattices
 	dirt = []
 
 	# states
@@ -25,7 +25,6 @@ class Lattice:
 		self.y = y
 		self.state = state
 		self.future = 0
-		Lattice.dirt.append(self)
 		self.neighbors = []
 		return
 
@@ -34,24 +33,14 @@ class Lattice:
 
 	def calcNeighbors(self, size):
 		a = []
-		for z in Lattice.dirt:
-			if z.x == self.x and z.y == self.y + 1 % size:
-				a += [z]
-			elif z.x == self.x and z.y + 1 % size == self.y:
-				a += [z]
-			elif z.x + 1 % size == self.x and z.y == self.y:
-				a += [z]
-			elif z.x == self.x + 1 % size and z.y == self.y:
-				a += [z]
-			elif z.x + 1 % size == self.x and z.y == self.y + 1 % size:
-				a += [z]
-			elif z.x + 1 % size == self.x and z.y + 1 % size == self.y:
-				a += [z] 
-			elif z.x == self.x + 1 % size and z.y + 1 % size == self.y:
-				a += [z]
-			elif z.x == self.x + 1 % size and z.y == self.y + 1 % size:
-				a += [z]
-
+		a.append(Lattice.dirt[(self.x - 1) % size][(self.y - 1) % size])
+		a.append(Lattice.dirt[(self.x - 1) % size][(self.y + 1) % size])
+		a.append(Lattice.dirt[(self.x + 1) % size][(self.y - 1) % size])
+		a.append(Lattice.dirt[(self.x + 1) % size][(self.y + 1) % size])
+		a.append(Lattice.dirt[(self.x - 1) % size][self.y])
+		a.append(Lattice.dirt[(self.x + 1) % size][self.y])
+		a.append(Lattice.dirt[self.x][(self.y + 1) % size])
+		a.append(Lattice.dirt[self.x][(self.y + 1) % size])
 		self.neighbors = a
 
 	def computeIndex(self, size):
@@ -62,7 +51,6 @@ class Lattice:
 
 	def update(self):
 		self.state = self.future
-		#self.future = 0
 		return
 
 	def stageNextState(self, index, size):
@@ -124,41 +112,44 @@ class Game:
 	def setup(self):
 		print("Initiallizing...")
 		time.sleep(1)
-		for i in range(self.size):
-			for j in range(self.size):
-				state = 0
-				Lattice(i,j,state)
+		for i in range(0, self.size):
+			temp = []
+			for j in range(0, self.size):
+				print("i: " + str(i) + " j: " + str(j))
+				l = Lattice(i,j,0)
+				temp.append(l)
+			self.lattices.append(temp)
 		#UNCOMMENT TO SEE LATTICE NEIGHBOR CALCULATION
 		count = 0
-		for l in self.lattices:
-			l.calcNeighbors(self.size)
-			#UNCOMMENT TO SEE LATTICE CURRENTLY WORKING
-			count += 1
-			print("Lattice point: " + str(count))
+		for i in range(self.size):
+			for j in range(self.size):
+				self.lattices[i][j].calcNeighbors(self.size)
+				#UNCOMMENT TO SEE LATTICE CURRENTLY WORKING
+				count += 1
+				print("Lattice point: " + str(count))
 		return
 	
 
 	def stage(self):
-		for lattice in self.lattices:
-			index = lattice.computeIndex(self.size)
-			lattice.stageNextState(index, self.size)
+		for i in range(self.size):
+			for j in range(self.size):
+				index = self.lattices[i][j].computeIndex(self.size)
+				self.lattices[i][j].stageNextState(index, self.size)
 		return
 	
 	def update(self):
-		for lattice in self.lattices:
-			lattice.update()
+		for i in range(self.size):
+			for j in range(self.size):
+				self.lattices[i][j].update()
 		return
 
 	def printPointAt(self, ex, why):
-		for lattice in self.lattices:
-			if lattice.x == ex and lattice.y == why:
-				sys.stdout.write(str(lattice) + " ") 
-				return
+		sys.stdout.write(str(self.lattices[ex][why]) + " ") 
 	
 	def printBoard(self):
-		for y in range(self.size):
-			for x in range(self.size):
-				self.printPointAt(x,y)
+		for i in range(self.size):
+			for j in range(self.size):
+				self.printPointAt(i,j)
 			print("")
 
 	def play(self):
