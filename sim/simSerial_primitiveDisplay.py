@@ -9,17 +9,18 @@ from math import ceil, floor, sqrt
 
 pWidth = 500
 
-N = 20
+N = 18
 t = 2000
 
 class Lattice:
+	#static array data structure for lattices
 	dirt = []
+
 	# states
  	# 0: dry
 	# 1: saturated on top, no water on top
 	# 2: not saturated, water on top
 	# 3: saturated and water on top (ultra saturated)
-
 	def __init__(self, x, y, state):
 		self.x = x
 		self.y = y
@@ -53,13 +54,14 @@ class Lattice:
 
 	def update(self):
 		self.state = self.future
-		self.future = 0
+		#self.future = 0
 		return
 
 	def stageNextState(self, index, size):
 		index = self.computeIndex(size)
+
 		#completely dry
-		#1% chance of getting rained on
+		#1/3% chance of getting rained on
 		#index 0-6: stays dry
 		#index 6-12: get saturated
 		#index 13-24: gets ultra saturated
@@ -74,7 +76,7 @@ class Lattice:
 				self.future = 3
 
 		#saturated with no water on top
-	   	#1% chance of ultra saturation (gets rained on)
+	   	#1/3% chance of ultra saturation (gets rained on)
 		#index 0-2: future dries up
 		#else: stays saturated 
 		elif self.state == 1:
@@ -88,21 +90,20 @@ class Lattice:
 		#water on top with no saturation
 		#40% chance of resting on top
 		#40% chance of saturating earth
-		#10% chance of drying up
+		#20% chance of drying up
 		elif self.state == 2:
 			r = random.choice([2, 2, 1, 1, 0])
 			self.future = r
 			
-
 		#saturated with water on top	
-		#index 0-16: future only saturated
-		#index 17-20: future same as present
-		#index 21-24: future dried up (erosion? washed away? doesn't make too much practical sense)
+		#index 0-9 goes to just saturated state
+		#index 10-24 remains ultra-saturated
 		else:
 			if index < 10:
 				self.future = 1
 			else:
 				self.future = 3
+
 
 class Game:
 	
@@ -115,20 +116,18 @@ class Game:
 	def setup(self):
 		for i in range(self.size):
 			for j in range(self.size):
-				state = 0 #random.choice([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,3])
+				state = 0
 				Lattice(i,j,state)
 		return
 	
 
 	def stage(self):
-		#lattices = Lattice.dirt
 		for lattice in self.lattices:
 			index = lattice.computeIndex(self.size)
 			lattice.stageNextState(index, self.size)
 		return
 	
 	def update(self):
-		#lattices = Lattice.dirt
 		for lattice in self.lattices:
 			lattice.update()
 		return
@@ -172,18 +171,3 @@ class Game:
 a = Game(N, t)
 a.play()
 
-			
-#x = a.xResults()
-#y = a.yResults()
-#state = a.stateResults()
-
-#for ycoordinate in y:
-#	for xcoordinate in x:
-#		print(
-
-#for j in range(t):
-#	b = [] 
-#	for i in range(size):
-#		b.append([z[2][j] for z in a.results() if z[0] == i
-#	plt.spy(b)
-#	plt.savefig("time{" + j + "}.png")
