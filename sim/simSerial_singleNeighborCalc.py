@@ -8,8 +8,14 @@ from math import ceil, floor, sqrt
 #import plotly.plotly as py
 #import plotly.tools as tls	
 
-N = 50
-t = 500
+
+if(len(sys.argv) < 3):
+	sys.exit("usage: python[3] simSerial_singleNeighborCalc.py [num lattice points each side of square] [num timesteps]") 
+	time.sleep(1)
+
+N = int(sys.argv[1])
+t = int(sys.argv[2])
+
 
 class Lattice:
 	#static 2D array data structure for lattices
@@ -57,12 +63,12 @@ class Lattice:
 		index = self.computeIndex(size)
 
 		#completely dry
-		#1/3% chance of getting rained on
+		#0.2% chance of getting rained on
 		#index 0-6: stays dry
 		#index 6-12: get saturated
 		#index 13-24: gets ultra saturated
 		if self.state == 0:
-			if random.randint(1, 301) < 2:
+			if random.randint(1, 501) < 2:
 				self.future = 2
 			elif index < 7:
 				self.future = 0
@@ -72,11 +78,11 @@ class Lattice:
 				self.future = 3
 
 		#saturated with no water on top
-	   	#1/3% chance of ultra saturation (gets rained on)
+	   	#0.2% chance of ultra saturation (gets rained on)
 		#index 0-2: future dries up
 		#else: stays saturated 
 		elif self.state == 1:
-			if random.randint(1, 301) < 2 or index > 17:
+			if random.randint(1, 501) < 2 or index > 17:
 				self.future = 3
 			elif index < 1:
 				self.future = 0
@@ -114,19 +120,18 @@ class Game:
 		time.sleep(1)
 		for i in range(0, self.size):
 			temp = []
-			for j in range(0, self.size):
-				print("i: " + str(i) + " j: " + str(j))
+			for j in range(0, self.size):	
 				l = Lattice(i,j,0)
 				temp.append(l)
 			self.lattices.append(temp)
 		#UNCOMMENT TO SEE LATTICE NEIGHBOR CALCULATION
-		count = 0
+		#count = 0
 		for i in range(self.size):
 			for j in range(self.size):
 				self.lattices[i][j].calcNeighbors(self.size)
 				#UNCOMMENT TO SEE LATTICE CURRENTLY WORKING
-				count += 1
-				print("Lattice point: " + str(count))
+				#count += 1
+				#print("Lattice point: " + str(count))
 		return
 	
 
