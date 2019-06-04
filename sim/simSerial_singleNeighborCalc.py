@@ -51,16 +51,7 @@ class Lattice:
 				a += [z]
 			elif z.x == self.x + 1 % size and z.y == self.y + 1 % size:
 				a += [z]
- 	
-		#lattices = Lattice.dirt
-		#a += [z for z in lattices if z.x == self.x and z.y == self.y + 1 % size]
-		#a += [z for z in lattices if z.x == self.x and z.y + 1 % size == self.y]
-		#a += [z for z in lattices if z.x + 1 % size == self.x and z.y == self.y] 
-		#a += [z for z in lattices if z.x == self.x + 1 % size and z.y == self.y]
-		#a += [z for z in lattices if z.x + 1 % size == self.x and z.y == self.y + 1 % size]
-		#a += [z for z in lattices if z.x + 1 % size == self.x and z.y + 1 % size == self.y]
-		#a += [z for z in lattices if z.x == self.x + 1 % size and z.y + 1 % size == self.y]
-		#a += [z for z in lattices if z.x == self.x + 1 % size and z.y == self.y + 1 % size]
+
 		self.neighbors = a
 
 	def computeIndex(self, size):
