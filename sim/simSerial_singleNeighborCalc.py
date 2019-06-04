@@ -8,9 +8,7 @@ from math import ceil, floor, sqrt
 #import plotly.plotly as py
 #import plotly.tools as tls	
 
-pWidth = 500
-
-N = 100
+N = 50
 t = 2000
 
 class Lattice:
