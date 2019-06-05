@@ -8,6 +8,7 @@ from math import ceil, floor, sqrt
 #import plotly.plotly as py
 #import plotly.tools as tls	
 
+random.seed(420)
 
 if(len(sys.argv) < 3):
 	sys.exit("usage: python[3] simSerial_singleNeighborCalc.py [num lattice points each side of square] [num timesteps]") 
@@ -45,7 +46,7 @@ class Lattice:
 		self.neighbors.append(Lattice.dirt[(self.x - 1) % size][self.y])
 		self.neighbors.append(Lattice.dirt[(self.x + 1) % size][self.y])
 		self.neighbors.append(Lattice.dirt[self.x][(self.y + 1) % size])
-		self.neighbors.append(Lattice.dirt[self.x][(self.y + 1) % size])
+		self.neighbors.append(Lattice.dirt[self.x][(self.y - 1) % size])
 
 	def computeIndex(self, size):
 		index = 0
@@ -157,17 +158,17 @@ class Game:
 
 	def play(self):
                 self.setup()
-                print("Simulation beginning...")
-                time.sleep(1)		
+                #print("Simulation beginning...")
+                #time.sleep(1)		
                 for i in range(1, self.timeSteps):
                         self.stage()
                         self.update()
                         #UNCOMMENT IF YOU WANT TO SEE TIMESTEPS
-                        print("Timestep: " + str(i))
-                print("Done! Printing board:")
-                time.sleep(1)
+                        #print("Timestep: " + str(i))
+                #print("Done! Printing board:")
+                #time.sleep(1)
                 self.printBoard()
-                #print("*" * self.size + str(i) + "*" * (self.size-1))
+                print("*" * self.size + str(i) + "*" * (self.size-1))
                 return
 
 a = Game(N, t)
