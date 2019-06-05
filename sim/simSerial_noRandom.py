@@ -124,8 +124,8 @@ class Game:
 		return
 
 	def setup(self):
-		print("Initializing...")
-		time.sleep(1)
+		#print("Initializing...")
+		#time.sleep(1)
 		for i in range(0, self.size):
 			temp = []
 			for j in range(0, self.size):	
@@ -167,7 +167,7 @@ class Game:
 
 	def play(self):
 		self.setup()
-		print("Simulation beginning...")
+		#print("Simulation beginning...")
 		#time.sleep(1)		
 		for i in range(1, self.timeSteps):
 			self.stage()
