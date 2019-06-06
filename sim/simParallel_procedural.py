@@ -3,7 +3,6 @@ import time
 import random
 import numpy as np
 from array import *
-from pyinstrument import Profiler
 from math import ceil, floor, sqrt
 from mpi4py import MPI
 
@@ -13,16 +12,17 @@ rank = comm.Get_rank()
 
 random.seed(420)
 
-N = 100
-t = 900
+N = 512
+t = 100
 
+height = int(N/size)
 
 #used later (larger scope for speed
 state = 0
 index = 0
 
-evenGrid = np.zeros((N / size, N), dtype=int)
-oddGrid = np.zeros((N / size, N), dtype=int)
+evenGrid = np.zeros((height, N), dtype=int)
+oddGrid = np.zeros((height, N), dtype=int)
 
 top_halo = np.zeros(N, dtype=int)
 bot_halo = np.zeros(N, dtype=int)
@@ -66,14 +66,14 @@ def update(timestep):
 
 	if timestep % 2 == 0:
 		comm.Isend(evenGrid[0, :], dest=up_dest)
-		comm.Isend(evenGrid[N/size - 1, :], dest=down_dest) 
+		comm.Isend(evenGrid[height - 1, :], dest=down_dest) 
 	else:	
 		comm.Isend(oddGrid[0, :], dest=up_dest)
-		comm.Isend(oddGrid[N/size - 1, :] dest=down_dest)
+		comm.Isend(oddGrid[height - 1, :], dest=down_dest)
 
 
 	#for each lattice point NOT on edge, do an update
-	for i in range(1, N / size - 1):
+	for i in range(1, height - 1):
 		for j in range(N):
 
 			#index calculation
@@ -84,7 +84,7 @@ def update(timestep):
 				index += evenGrid[i, (j + 1) % N] 
 				index += evenGrid[i, (j - 1) % N] 
 				index += evenGrid[(i - 1) % N, (j + 1) % N]
-		 		index += evenGrid[(i + 1) % N, (j - 1) % N] 
+				index += evenGrid[(i + 1) % N, (j - 1) % N] 
 				index += evenGrid[(i + 1) % N, (j + 1) % N] 
 				index += evenGrid[(i - 1) % N, (j - 1) % N] 
 			else:
@@ -144,7 +144,7 @@ def update(timestep):
 			index += oddGrid[1, j]
 			index += oddGrid[1, (j+1) % N]
 
-		state = next_state(state, index)
+		state = new_state(state, index)
 
 		if timestep % 2 == 0:
 			oddGrid[0, j] = state
@@ -154,9 +154,9 @@ def update(timestep):
 	#bottom update calculations
 	for j in range(N):
 		if timestep % 2 == 0:
-			state = evenGrid[i, j]
+			state = evenGrid[height - 1, j]
 		else:
-			state = oddGrid[N/size - 1, j]
+			state = oddGrid[height - 1, j]
 	
 		index = 0
 		index += bot_halo[(j-1) % N]
@@ -164,25 +164,27 @@ def update(timestep):
 		index += bot_halo[(j+1) % N]
 
 		if timestep % 2 == 0:
-			index += evenGrid[N/size - 1, (j+1) % N]
-			index += evenGrid[N/size - 1, (j-1) % N]
-			index += evenGrid[N/size - 2, (j-1) % N]
-			index += evenGrid[N/size - 2, j]
-			index += evenGrid[N/size - 2, (j+1) % N]
+			index += evenGrid[height - 1, (j+1) % N]
+			index += evenGrid[height - 1, (j-1) % N]
+			index += evenGrid[height - 2, (j-1) % N]
+			index += evenGrid[height - 2, j]
+			index += evenGrid[height - 2, (j+1) % N]
 			
 		else:
-			index += oddGrid[N/size - 1, (j-1) % N]
-			index += oddGrid[N/size - 1, (j+1) % N]
-			index += oddGrid[N/size - 2, (j-1) % N]
-			index += oddGrid[N/size - 2, j]
-			index += oddGrid[N/size - 2, (j+1) % N]
+			index += oddGrid[height - 1, (j-1) % N]
+			index += oddGrid[height - 1, (j+1) % N]
+			index += oddGrid[height - 2, (j-1) % N]
+			index += oddGrid[height - 2, j]
+			index += oddGrid[height - 2, (j+1) % N]
 
-		state = next_state(state, index)
+		state = new_state(state, index)
 
 		if timestep % 2 == 0:
 			oddGrid[0, j] = state
 		else:
 			evenGrid[0, j] = state
+
+	comm.barrier()
 
 """
 def printBoard(last_timestep):
