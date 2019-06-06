@@ -184,7 +184,7 @@ def update(timestep):
 		else:
 			evenGrid[height-1, j] = state
 
-	comm.barrier()
+	#comm.barrier()
 
 
 def printPart(last_timestep):
