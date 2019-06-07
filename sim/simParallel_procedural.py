@@ -12,22 +12,30 @@ rank = comm.Get_rank()
 
 random.seed(rank)
 
-N = 50
-t = 900
+N = 256
+t = 1000
+
+if len(sys.argv) > 1:
+	N = int(sys.argv[1])
+
+if len(sys.argv) > 2:
+	t = int(sys.argv[2])
 
 height = int(N/size)
 
-#used later (larger scope for speed
+#used later (larger scope for speed)
 state = 0
 index = 0
 
-evenGrid = np.zeros((height, N), dtype=int)
-oddGrid = np.zeros((height, N), dtype=int)
+evenGrid = np.zeros((height, N), dtype=int, order='C')
+oddGrid = np.zeros((height, N), dtype=int, order='C')
 
-top_halo = np.zeros(N, dtype=int)
-bot_halo = np.zeros(N, dtype=int)
+top_halo = np.zeros(N, dtype=int, order='C')
+bot_halo = np.zeros(N, dtype=int, order='C')
 
 
+#rules defined here
+#lots of hard-coding
 def new_state(state, index):
 	if state == 0:
 		if random.randint(1, 501) < 2:
@@ -184,9 +192,40 @@ def update(timestep):
 		else:
 			evenGrid[height-1, j] = state
 
-	#comm.barrier()
+	comm.barrier()
+
+#Writes to a binary data entry file
+def write_to_file(most_recent_timestep):
+	amode = MPI.MODE_WRONLY|MPI.MODE_CREATE
+	output = MPI.File.Open(comm, "end" + str(most_recent_timestep) + ".fbgm", amode)
+	if most_recent_timestep % 2 == 0:
+		offset = oddGrid.nbytes * rank
+		output.Write_at_all(offset, oddGrid)
+	else:
+		offset = evenGrid.nbytes * rank
+		output.Write_at_all(offset, evenGrid)
+	output.Close() 
+	#thank you donald christopher jones ^
+
+#storing headers
+if rank == 0:
+	f = open('conditions.fbgm', 'w')
+	s = str(N)+"\n"+str(t)+"\n"+str(size)+"\n"+str(height)+"\n"
+	f.write(s)
+	f.close()
+
+for timestep in range(1, t+1):
+	update(timestep)
+
+write_to_file(t)
 
 
+
+
+
+
+'''
+#OLD SHIT BELOW
 def printPart(last_timestep):
 	print("rank " + str(rank) + " printing..")
 	if last_timestep % 2 == 0:
@@ -200,7 +239,6 @@ def printPart(last_timestep):
 				sys.stdout.write(str(str(oddGrid[i, j]) + " "))
 			print("\n")
 
-for timestep in range(1, t+1):
-	update(timestep)
+#printPart(t)
 
-printPart(t)
+'''
