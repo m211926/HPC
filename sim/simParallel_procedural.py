@@ -12,8 +12,8 @@ rank = comm.Get_rank()
 
 random.seed(rank)
 
-N = 256
-t = 1000
+N = 512
+t = 3000
 
 if len(sys.argv) > 1:
 	N = int(sys.argv[1])
@@ -192,12 +192,11 @@ def update(timestep):
 		else:
 			evenGrid[height-1, j] = state
 
-	comm.barrier()
 
 #Writes to a binary data entry file
 def write_to_file(most_recent_timestep):
 	amode = MPI.MODE_WRONLY|MPI.MODE_CREATE
-	output = MPI.File.Open(comm, "end" + str(most_recent_timestep) + ".fbgm", amode)
+	output = MPI.File.Open(comm, "./data/end" + str(most_recent_timestep) + ".fbgm", amode)
 	if most_recent_timestep % 2 == 0:
 		offset = oddGrid.nbytes * rank
 		output.Write_at_all(offset, oddGrid)
@@ -216,9 +215,8 @@ if rank == 0:
 
 for timestep in range(1, t+1):
 	update(timestep)
-
-write_to_file(t)
-
+	write_to_file(timestep)
+	comm.barrier()
 
 
 

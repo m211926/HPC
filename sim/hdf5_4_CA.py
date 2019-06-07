@@ -9,7 +9,7 @@ def writeH5(s, r, filename):
   filename = string with desired filename
   """
 
-  f = h5py.File(filename,'w')
+  f = h5py.File("./parafiles/" + filename,'w')
 
   # Store state and rank data into the state and rank group of h5 file
   state_group = f.create_group("state_group")
@@ -27,7 +27,7 @@ def writeXdmf(dims,dx,filename,h5_file):
   dims = 3-tuple with the number of rank in each dimension (z,y,x)
   """
 
-  f = open(filename,'w')
+  f = open("./parafiles/" + filename,'w')
   f.write('<?xml version="1.0" ?>\n')
   f.write('<!DOCTYPE Xdmf SYSTEM "Xdmf.dtd" []>\n')
   f.write('<Xdmf xmlns:xi="http://www.w3.org/2003/XInclude" Version="2.1">\n')
