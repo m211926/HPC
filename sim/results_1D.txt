@@ -17,6 +17,7 @@ sys	0m0.032s
 518505459.862 LPU/s
 
 
+
 2016 core 2000 processes (conrad)
 10000x10000 3000 timesteps 1D partition
 Application 123412600 resources: utime ~1375116s, stime ~661s, Rss ~33824, inblocks ~15088463, outblocks ~1952
@@ -26,6 +27,17 @@ sys	0m0.024s
 420467223.178 LPU/s
 
 
+
+1280 core 1250 processes (conrad)
+10000x10000 3000 timesteps 1D partition
+Application 123412910 resources: utime ~1385118s, stime ~393s, Rss ~33348, inblocks ~9431040, outblocks ~1237
+real	18m45.490s
+user	0m0.004s
+sys	0m0.040s
+266550569.085 LPU/s
+
+
+
 1024 core 1000 processes (conrad)
 10000x10000 3000 timesteps 1D partition
 Application 123391627 resources: utime ~1391246s, stime ~313s, Rss ~33304, inblocks ~7544749, outblocks ~989
@@ -33,6 +45,7 @@ real	23m25.406s
 user	0m0.004s
 sys	0m0.044s
 213461448.151 LPU/s
+
 
 
 512 core 500 processes (conrad)
