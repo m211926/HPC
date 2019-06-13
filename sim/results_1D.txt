@@ -1,0 +1,41 @@
+Results:
+
+python:
+8 core object oriented
+500000 LPU/s (test more)
+
+MPI4PY:
+1024 core 1000 processes (conrad)
+10000x10000 3000 timesteps 1D partition
+
+Application 123391627 resources: utime ~1391246s, stime ~313s, Rss ~33304, inblocks ~7544749, outblocks ~989
+
+real	23m25.406s
+user	0m0.004s
+sys	0m0.044s
+213461448.151 LPU/s
+
+
+
+512 core 500 processes (conrad)
+10000x10000 3000 timesteps
+
+Application 123398315 resources: utime ~1395714s, stime ~175s, Rss ~34212, inblocks ~3772237, outblocks ~495
+
+real	46m40.050s
+user	0m0.008s
+sys	0m0.076s
+107140943.912 LPU/s
+
+
+256 core 250 processes (conrad)
+10000x10000 3000 timesteps 1D Partition
+
+Application 123399235 resources: utime ~1373454s, stime ~93s, Rss ~37028, inblocks ~1885930, outblocks ~248
+
+real	91m41.526s
+user	0m0.036s
+sys	0m0.068s
+
+54530324.859 LPU/s
+
