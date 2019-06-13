@@ -44,6 +44,7 @@ sys	0m0.076s
 107140943.912 LPU/s
 
 
+
 256 core 250 processes (conrad)
 10000x10000 3000 timesteps 1D Partition
 Application 123399235 resources: utime ~1373454s, stime ~93s, Rss ~37028, inblocks ~1885930, outblocks ~248
