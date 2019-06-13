@@ -28,6 +28,7 @@ sys	0m0.076s
 107140943.912 LPU/s
 
 
+
 256 core 250 processes (conrad)
 10000x10000 3000 timesteps 1D Partition
 
