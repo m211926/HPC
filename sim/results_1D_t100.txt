@@ -1,0 +1,129 @@
+1024 core 1000 processes
+10000x10000 100 timesteps
+Application 123462964 resources: utime ~48964s, stime ~304s, Rss ~28416, inblocks ~7544777, outblocks ~989
+real	1m3.309s
+user	0m0.008s
+sys	0m0.028s
+157955424.979
+
+
+640 core 625 process
+Application 123460617 resources: utime ~48868s, stime ~191s, Rss ~28836, inblocks ~4715319, outblocks ~619
+real	1m27.040s
+user	0m0.008s
+sys	0m0.028s
+114889705.882 LPU/s
+
+
+512 core 500 processes
+10000x10000 100 timesteps
+Application 123460545 resources: utime ~48772s, stime ~157s, Rss ~29300, inblocks ~3772230, outblocks ~495
+real	1m44.785s
+user	0m0.008s
+sys	0m0.024s
+95433506.7042 LPU/s
+
+
+416 core 400 processes
+10000x10000 100 timesteps
+Application 123460452 resources: utime ~48884s, stime ~128s, Rss ~29980, inblocks ~3017997, outblocks ~402
+real	2m8.476s
+user	0m0.000s
+sys	0m0.032s
+77835549.052 LPU/s
+
+
+256 core 250 processes
+10000x10000 100 timesteps
+Application 123414667 resources: utime ~49047s, stime ~85s, Rss ~32192, inblocks ~1885936, outblocks ~248
+real	3m21.394s
+user	0m0.004s
+sys	0m0.044s
+49653912.2317 LPU/s
+
+
+224 core 200 processes
+Application 123460644 resources: utime ~48779s, stime ~66s, Rss ~33568, inblocks ~1509489, outblocks ~214
+real	4m9.141s
+user	0m0.012s
+sys	0m0.024s
+40137913.8721 LPU/s
+
+
+128 core 125 processes
+10000x10000 100 timesteps
+Application 123460104 resources: utime ~48989s, stime ~59s, Rss ~38088, inblocks ~942826, outblocks ~124
+real	6m38.771s
+user	0m0.004s
+sys	0m0.032s
+25077049.2338 LPU/s
+
+128 core 100 processes
+10000x10000 100 timesteps
+Application 123413609 resources: utime ~49524s, stime ~35s, Rss ~41188, inblocks ~755184, outblocks ~121
+real	8m21.035s
+user	0m0.004s
+sys	0m0.084s
+19958685.521 LPU/s
+
+
+64 core 50 processes
+10000x10000 100 timesteps
+Application 123413550 resources: utime ~48326s, stime ~18s, Rss ~56576, inblocks ~377452, outblocks ~60
+real    16m12.007s
+user    0m0.020s
+10287991.7531 LPU/s
+
+
+32 core 25 processes
+10000x10000 100 timesteps
+Application 123413548 resources: utime ~48657s, stime ~10s, Rss ~82644, inblocks ~187193, outblocks ~30
+real    32m31.379s
+user    0m0.008s
+sys     0m0.044s
+5124581.12955 LPU/s
+
+
+32 core 16 processes
+10000x10000 100 timesteps
+Application 123413495 resources: utime ~48967s, stime ~8s, Rss ~117664, inblocks ~119810, outblocks ~29
+real    51m5.628s
+user    0m0.016s
+sys     0m0.052s
+3261974.38176 LPU/s
+
+
+32 core 8 processes
+10000x10000 100 timesteps
+Application 123413429 resources: utime ~44240s, stime ~7s, Rss ~215132, inblocks ~59913, outblocks ~28
+real    92m16.020s
+user    0m0.012s
+sys     0m0.088s
+1806351.85567 LPU/s
+
+
+32 core 4 processes
+10000x10000 100 timesteps
+Application 123413432 resources: utime ~38966s, stime ~15s, Rss ~410400, inblocks ~29965, outblocks ~28
+real    162m31.803s
+user    0m0.040s
+sys     0m0.112s
+1025451.39601 LPU/s
+
+
+32 core 2 processes
+10000x10000 100 timesteps
+Application 123413431 resources: utime ~35767s, stime ~33s, Rss ~800764, inblocks ~14991, outblocks ~28
+real    298m29.918s
+user    0m0.076s
+sys     0m0.168s
+558349.848391 LPU/s
+
+
+32 core 1 process
+10000x10000 100 timesteps
+Application 123413430 resources: utime ~35582s, stime ~2s, Rss ~1581596, inblocks ~7504, outblocks ~28
+real    593m21.791s
+user    0m0.104s
+sys     0m0.496s
+280884.745377 LPU/scall updates for each timestep
