@@ -1,3 +1,19 @@
+2016 core 2000 processes
+10000x10000 100 timesteps
+Application 123465406 resources: utime ~48758s, stime ~637s, Rss ~28924, inblocks ~15088311, outblocks ~1952
+real	0m50.486s
+user	0m0.016s
+sys	0m0.016s
+198074713.78 LPU/s
+
+1280 core 1250 processes
+10000x10000 100 timesteps
+Application 123463866 resources: utime ~48814s, stime ~382s, Rss ~28476, inblocks ~9430890, outblocks ~1237
+real	0m56.167s
+user	0m0.004s
+sys	0m0.024s
+178040486.407 LPU/s
+
 1024 core 1000 processes
 10000x10000 100 timesteps
 Application 123462964 resources: utime ~48964s, stime ~304s, Rss ~28416, inblocks ~7544777, outblocks ~989
