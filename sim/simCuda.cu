@@ -8,8 +8,10 @@
 #include <curand_kernel.h>
 #include <math.h>
 
-#define MAX 501
 
+/**
+ * This kernel essentially serves as a "srand(seed)" on the GPU
+ */
 __global__ void setup_kernel(curandState ** state){
 	int y = (blockIdx.y * blockDim.y) + threadIdx.y;
         int x = (blockIdx.x * blockDim.x) + threadIdx.x;
@@ -18,12 +20,16 @@ __global__ void setup_kernel(curandState ** state){
 	curand_init(420+69, randid, 0, &state[x][y]);
 }
 
+
+/**
+ * Executes one timestep on a thread
+ */
 __global__ void update(short * inGrid[], short * outGrid[], int N, curandState ** rand_state){
 	int y = (blockIdx.y * blockDim.y) + threadIdx.y;
 	int x = (blockIdx.x * blockDim.x) + threadIdx.x;
 	
 	//generate random number
-	unsigned int randres = curand(rand_state[x][y]);
+	unsigned int randres = curand(&rand_state[x][y]);
 	randres = ((int) randres) % 500;
 
 	int index = 0;
@@ -56,7 +62,7 @@ __global__ void update(short * inGrid[], short * outGrid[], int N, curandState *
 		else state = 0;
 	}
 	else{
-		if index < 10 state = 1;
+		if(index < 10) state = 1;
 		else state = 3;
 	}
 	
@@ -65,10 +71,10 @@ __global__ void update(short * inGrid[], short * outGrid[], int N, curandState *
 }
 
 
-void print_grid(short* grid[], short* source_d, int N) {
-	for(int y = 0; y < N; i++){
+void print_grid(short* grid[], short* source_d[], int N) {
+	for(int y = 0; y < N; y++){
 		for(int x = 0; x < N; x++){
-			cudaMemcpy(grid[x][y], source_d[x][y], sizeof(short), cudaMemcpyDeviceToHost)
+			cudaMemcpy(&grid[x][y], &source_d[x][y], sizeof(short), cudaMemcpyDeviceToHost);
 		}
 	}
 	
@@ -78,6 +84,8 @@ void print_grid(short* grid[], short* source_d, int N) {
 		}
 		printf("/n");
 	}
+	
+	return;
 }
 
 int main(int argc, char * argv[]){
@@ -107,45 +115,45 @@ int main(int argc, char * argv[]){
 	int blockw = N/common_divisor;
 
 	//blank grid (host)
-	short * blankGrid[];
+	short ** blankGrid;
 
 	//grid memory allocation (host)
-	blankGrid = calloc(N, sizeof(short*));
-	for(int i = 0; i < N, i++){
-		blankGrid[i] = calloc(N, sizeof(short));
+	blankGrid = (short**) calloc(N, sizeof(short*));
+	for(int i = 0; i < N; i++){
+		blankGrid[i] = (short *) calloc(N, sizeof(short));
 	}
 	
 	//grids (device)
-	short * evenGrid_d[];
-	short * oddGrid_d[];
+	short ** evenGrid_d;
+	short ** oddGrid_d;
 
 	//memory allocation (device)
-	cudaMalloc((void***) &evenGrid, N*sizeof(short*));
-	cudaMalloc((void***) &oddGrid, N*sizeof*(short*));
+	cudaMalloc((void***) &evenGrid_d, N*sizeof(short*));
+	cudaMalloc((void***) &oddGrid_d, N*sizeof(short*));
 	for(int i = 0; i < N; i++){
-		cudaMalloc((void**) &evenGrid[i], N*sizeof(short));
-		cudaMalloc((void**) &oddGrid[i], N*sizeof(short));
+		cudaMalloc((void**) &evenGrid_d[i], N*sizeof(short));
+		cudaMalloc((void**) &oddGrid_d[i], N*sizeof(short));
 	}
 
 	//transfer CPU contents to GPU (all zeroed out)
 	for(int y = 0; y < N; y++){
 		for(int x = 0; x < N; x++){
-			cudaMemcpy(evenGrid_d[x][y], blankGrid[x][y], sizeof(short), cudaMemcpyHostToDevice);
-			cudaMemcpy(oddGrid_d[x][y], blankGrid[x][y], sizeof(short), cudaMemcpyHostToDevice);
+			cudaMemcpy(&evenGrid_d[x][y], &blankGrid[x][y], sizeof(short), cudaMemcpyHostToDevice);
+			cudaMemcpy(&oddGrid_d[x][y], &blankGrid[x][y], sizeof(short), cudaMemcpyHostToDevice);
 		}
 	}
 
 
 
-	//********************************************************************
-	//***************************KERNEL CALLS*****************************
-	//********************************************************************
+	//*******************************************************************
+	//***************************KERNEL CALLS****************************
+	//*******************************************************************
 	//declare dimentions of blocks and block arrangement
 	dim3 BLOCK_ARRANGEMENT(common_divisor,common_divisor,1);
 	dim3 BLOCK_SHAPE(blockw,blockw,1);
 
 	//random number stuff (it's a headache)
-	curandState * states_d[];
+	curandState ** states_d;
 	cudaMalloc((void***) &states_d, N * sizeof(curandState*));
 	for(int i = 0; i < N; i++){
 		cudaMalloc((void**) &states_d[i], N * sizeof(curandState));
@@ -163,10 +171,12 @@ int main(int argc, char * argv[]){
 			update<<<BLOCK_ARRANGEMENT,BLOCK_SHAPE>>>(oddGrid_d, evenGrid_d, N, states_d);
 			print_grid(blankGrid, evenGrid_d, N);
 		}
-		sleep(1)
+		sleep(1);
 	}
 
-	//cleanup
+	//*******************************************************************
+	//*****************************CLEANUP*******************************
+	//*******************************************************************
 	for(int i = 0; i < N; i++){
 		cudaFree(evenGrid_d[i]);
 		cudaFree(oddGrid_d[i]);
@@ -177,4 +187,6 @@ int main(int argc, char * argv[]){
         cudaFree(evenGrid_d);
 	cudaFree(oddGrid_d);
 	free(blankGrid);
+
+	return 0;
 }
