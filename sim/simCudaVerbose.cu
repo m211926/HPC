@@ -46,6 +46,8 @@ __global__ void update(int * inGrid, int * outGrid, curandState * rand_state){
 	index += inGrid[((x+1) % N) + N*((y+1) % N)];
 	index += inGrid[((x-1) % N) + N*((y+1) % N)];
 	
+	//printf("x:%d y:%d id:%d State:%d Index:%d\n", x, y, id, state, index);
+	
 	//find new state
 	if(state == 0){
 		if(randres == 0) state = 2;
@@ -54,6 +56,7 @@ __global__ void update(int * inGrid, int * outGrid, curandState * rand_state){
 		else state = 3;
 	}
 	else if(state == 1){
+		//printf("(%d,%d) s:%d i:%d\n", x, y, state, index);
 		if(randres == 0 || index > 16) state = 3;
 		else if(index < 1) state = 0;
 		else state = 1;
@@ -66,11 +69,11 @@ __global__ void update(int * inGrid, int * outGrid, curandState * rand_state){
 	else if(state == 3){
 		if(index > 9){
 			state = 3;
+			//printf("I, (%d, %d), stuck because i=%d\n", x, y, index);
 		}
 		else state = 1;
 	}
 	else printf("ERROR: (%d, %d) state out of bounds: %d\n", x, y, state);
-	
 	//update relevant array
 	outGrid[id] = state;
 }
@@ -114,18 +117,16 @@ int main(int argc, char * argv[]){
 	const int t = atoi(argv[2]);	
 	const int common_divisor = atoi(argv[3]);
 
-	/*
 	if(N*N % 32){
 		printf("Choose multiple of 32 on sides for best results\n");
 	}
-	*/
 	
 	if(N % common_divisor){
 		printf("Try again with an even divisor of your sidelength\n");
 		exit(1);
 	} 	
 	
-	//printf("begin grid setup\n");	
+	printf("begin grid setup\n");	
 	//*******************************************************************
 	//****************************GRID SETUP*****************************
 	//*******************************************************************
@@ -136,7 +137,7 @@ int main(int argc, char * argv[]){
 
 	//grid memory allocation (host)
 	blankGrid = (int*) calloc(N*N, sizeof(int));
-	//printf("grid host allocation complete\n");
+	printf("grid host allocation complete\n");
 
 	//grids (device)
 	int * evenGrid_d;
@@ -146,7 +147,7 @@ int main(int argc, char * argv[]){
 	cudaMalloc((void**) &evenGrid_d, N*N*sizeof(int));
 	cudaMalloc((void**) &oddGrid_d, N*N*sizeof(int));
 
-	//printf("even/odd grid device allocation complete\n");
+	printf("even/odd grid device allocation complete\n");
 	
 	//transfer CPU contents to GPU (all zeroed out)
 	for(int y = 0; y < N; y++){
@@ -156,14 +157,14 @@ int main(int argc, char * argv[]){
 		}
 	}
 	
-	//printf("device grid initialization complete\n");
+	printf("device grid initialization complete\n");
 
 
 	//*******************************************************************
 	//***************************KERNEL CALLS****************************
 	//*******************************************************************
 		
-	//printf("begin kernel calls\n");
+	printf("begin kernel calls\n");
 	//declare dimentions of blocks and block arrangement
 	dim3 BLOCK_ARRANGEMENT(common_divisor,common_divisor,1);
 	dim3 BLOCK_SHAPE(blockw,blockw,1);
@@ -172,12 +173,11 @@ int main(int argc, char * argv[]){
 	
 	curandState * states_d;
 	cudaMalloc((void**) &states_d, N*N*sizeof(curandState));
-	//printf("device random memory allocation complete\n");
+	printf("device random memory allocation complete\n");
 
 	setup_kernel<<<BLOCK_ARRANGEMENT,BLOCK_SHAPE>>>(states_d);
-	//printf("device random initialization complete, begin sim\n");	
-	
-	/*
+	printf("device random initialization complete, begin sim\n");	
+
 	usleep(500000);
 	printf("In 3..\n");
 	sleep(1);
@@ -185,8 +185,6 @@ int main(int argc, char * argv[]){
 	sleep(1);
 	printf("1..\n");
 	sleep(1);
-	
-	*/
 	//call updates for each timestep
 	for(int i = 1; i < t+1; i++){
 		printf("t=%d\n",i);
