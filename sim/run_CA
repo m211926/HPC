@@ -1,5 +1,5 @@
 #!/bin/bash
 
-mpirun -n 8 python simParallel_procedural.py
-python process_fbgm.py
+mpirun -n 8 python simParallel_procedural.py 256 2816
+mpirun -n 8 python process_fbgm.py
 

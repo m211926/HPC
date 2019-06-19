@@ -1,11 +1,14 @@
+import sys
 import random
 import numpy as np
 from array import *
 from matplotlib import pyplot as plt
 from math import ceil, floor, sqrt
-	
-N = 50
-t = 10
+#import plotly.plotly as py
+#import plotly.tools as tls	
+
+N = 20
+t = 20
 
 class Lattice:
 	dirt = []
@@ -115,6 +118,7 @@ class Game:
 	def __init__(self, size, timeSteps):
 		self.size = size
 		self.timeSteps = timeSteps
+		self.lattices = Lattice.dirt
 		return
 
 	def setup(self):
@@ -126,15 +130,15 @@ class Game:
 	
 
 	def stage(self):
-		lattices = Lattice.dirt
-		for lattice in lattices:
+		#lattices = Lattice.dirt
+		for lattice in self.lattices:
 			index = lattice.computeIndex(self.size)
 			lattice.stageNextState(index, self.size)
 		return
 	
 	def update(self):
-		lattices = Lattice.dirt
-		for lattice in lattices:
+		#lattices = Lattice.dirt
+		for lattice in self.lattices:
 			lattice.update()
 		return
 
@@ -142,21 +146,50 @@ class Game:
 		self.setup()
 		for i in range(1, self.timeSteps):
 			self.stage()
+			print("finished a stage")
 			self.update()
 			print("finished a step")
 		return
 
-	def results(self):
-		lattices = Lattice.dirt
-		a = [[z.x, z.y, z.state] for z in lattices]
-		print(a)
+	def printPointAt(self, ex, why):
+		#lattices = Lattice.dirt
+		for lattice in self.lattices:
+			if lattice.x == ex and lattice.y == why:
+				sys.stdout.write(str(lattice)) 
+				return
+
+	def xResults(self):
+		#lattices = Lattice.dirt
+		a = [[z.x] for z in self.lattices]
 		return a
+
+	def yResults(self):
+                #lattices = Lattice.dirt
+                a = [[z.y] for z in self.lattices]
+                return a
+
+	def stateResults(self):
+                #lattices = Lattice.dirt
+                a = [[z.state] for z in self.lattices]
+                return a
 
 
 a = Game(N, t)
 a.play()
-r = a.results()
 
+for y in range(N):
+	for x in range(N):
+		a.printPointAt(x, y)
+	print("")
+
+			
+#x = a.xResults()
+#y = a.yResults()
+#state = a.stateResults()
+
+#for ycoordinate in y:
+#	for xcoordinate in x:
+#		print(
 
 #for j in range(t):
 #	b = [] 
@@ -164,8 +197,3 @@ r = a.results()
 #		b.append([z[2][j] for z in a.results() if z[0] == i
 #	plt.spy(b)
 #	plt.savefig("time{" + j + "}.png")
-
-
-		
-	
-

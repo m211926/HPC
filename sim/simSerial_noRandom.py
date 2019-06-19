@@ -47,7 +47,7 @@ class Lattice:
 		self.neighbors.append(Lattice.dirt[(self.x - 1) % size][self.y])
 		self.neighbors.append(Lattice.dirt[(self.x + 1) % size][self.y])
 		self.neighbors.append(Lattice.dirt[self.x][(self.y + 1) % size])
-		self.neighbors.append(Lattice.dirt[self.x][(self.y + 1) % size])
+		self.neighbors.append(Lattice.dirt[self.x][(self.y - 1) % size])
 
 	def computeIndex(self, size):
 		index = 0

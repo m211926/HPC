@@ -18,12 +18,40 @@ t = 900
 
 
 #used later (larger scope for speed
-current_state = 0
-next_state = 0
+state = 0
 index = 0
 
 evenGrid = np.zeros((N, N), dtype=int)
 oddGrid = np.zeros((N, N), dtype=int)
+
+def new_state(state, index):
+	if state == 0:
+		if random.randint(1, 501) < 2:
+			return 2
+		elif index < 7:
+			return 0
+		elif index < 17:
+			return 1
+		else:
+			return 3
+
+	elif state == 1:
+		if random.randint(1, 501) < 2:
+			return 3
+		elif index < 1:
+			return 0
+		else:
+			return 1
+		
+	elif state == 2:
+		return random.choice([2,2,1,1,0])
+
+	else:
+		if index < 10:
+			return 1
+		else:
+			return 3
+
 
 def update(timestep):
 
@@ -54,43 +82,17 @@ def update(timestep):
  			
 			#state choices based on index and random number
 			if timestep % 2 == 0:
-				current_state = evenGrid[i, j]
+				state = evenGrid[i, j]
 			else:
-				current_state = oddGrid[i, j]
+				state = oddGrid[i, j]
 
-			if current_state == 0:
-				if random.randint(1, 501) < 2:
-					next_state = 2
-				elif index < 7:
-					next_state = 0
-				elif index < 17:
-					next_state = 1
-				else:
-					next_state = 3
-
-			elif current_state == 1:
-				if random.randint(1, 501) < 2:
-					next_state = 3
-				elif index < 1:
-					next_state = 0
-				else:
-					next_state = 1
-		
-			elif current_state == 2:
-				r = random.choice([2,2,1,1,0])
-				next_state = r
-
-			else:
-				if index < 10:
-					next_state = 1
-				else:
-					next_state = 3
+			state = new_state(state, index)
 
 			#update future grid (depends on which timestep)
 			if timestep % 2 == 0:
-				oddGrid[i, j] = next_state
+				oddGrid[i, j] = state
 			else:
-				evenGrid[i, j] = next_state
+				evenGrid[i, j] = state
 
 
 def printBoard(last_timestep):
@@ -105,9 +107,10 @@ def printBoard(last_timestep):
 				sys.stdout.write(str(str(oddGrid[i, j]) + " "))
 			print("")
 
+
 for timestep in range(1, t+1):
 	update(timestep)
 
 profiler.stop()
-#printBoard(t)
+printBoard(t)
 print(profiler.output_text(unicode=True, color=True))

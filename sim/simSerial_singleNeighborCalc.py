@@ -3,10 +3,13 @@ import time
 import random
 import numpy as np
 from array import *
-from matplotlib import pyplot as plt
 from math import ceil, floor, sqrt
 #import plotly.plotly as py
 #import plotly.tools as tls	
+from pyinstrument import Profiler
+
+profiler = Profiler()
+profiler.start()
 
 random.seed(420)
 
@@ -115,8 +118,7 @@ class Game:
 		return
 
 	def setup(self):
-		print("Initializing...")
-		time.sleep(1)
+		#print("Initializing...")
 		for i in range(0, self.size):
 			temp = []
 			for j in range(0, self.size):	
@@ -157,20 +159,21 @@ class Game:
 			print("")
 
 	def play(self):
-                self.setup()
-                #print("Simulation beginning...")
-                #time.sleep(1)		
-                for i in range(1, self.timeSteps):
-                        self.stage()
-                        self.update()
-                        #UNCOMMENT IF YOU WANT TO SEE TIMESTEPS
-                        #print("Timestep: " + str(i))
-                #print("Done! Printing board:")
-                #time.sleep(1)
-                self.printBoard()
-                print("*" * self.size + str(i) + "*" * (self.size-1))
-                return
+		self.setup()
+		#print("Simulation beginning...")
+		#time.sleep(1)		
+		for i in range(1, self.timeSteps):
+			self.stage()
+			self.update()
+			#UNCOMMENT IF YOU WANT TO SEE TIMESTEPS
+			#print("Timestep: " + str(i))
+		#print("Done! Printing board:")
+		#time.sleep(1)
+		profiler.stop()
+		self.printBoard()
+		#print("*" * self.size + str(i) + "*" * (self.size-1))
+		return
 
 a = Game(N, t)
 a.play()
-
+#print(profiler.output_text(unicode=True, color=True))

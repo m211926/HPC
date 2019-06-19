@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<!DOCTYPE Xdmf SYSTEM "Xdmf.dtd" []>
+<Xdmf xmlns:xi="http://www.w3.org/2003/XInclude" Version="2.1">
+<Domain>
+<Grid Name="my_Grid" GridType="Uniform">
+<Topology TopologyType="3DCoRectMesh" Dimensions="1 256 256">
+</Topology>
+<Geometry GeometryType="Origin_DxDyDz">
+<DataItem Dimensions="3" NumberType="Integer" Format="XML">
+0 0 0
+</DataItem>
+<DataItem Dimensions="3" NumberType="Integer" Format="XML">
+256 256 256
+</DataItem>
+</Geometry>
+<Attribute Name="state" AttributeType="Scalar" Center="Node">
+<DataItem Dimensions="1 256 256" NumberType="Integer" Format="HDF">
+CA718.h5:/state_group/state
+</DataItem>
+</Attribute>
+<Attribute Name="rank" AttributeType="Scalar" Center="Node">
+<DataItem Dimensions="1 256 256" NumberType="Integer" Format="HDF">
+CA718.h5:/rank_group/rank
+</DataItem>
+</Attribute>
+</Grid>
+</Domain>
+</Xdmf>

@@ -12,7 +12,7 @@ rank = comm.Get_rank()
 
 random.seed(rank)
 
-N = 512
+N = 64
 t = 3000
 
 if len(sys.argv) > 1:
@@ -21,6 +21,7 @@ if len(sys.argv) > 1:
 if len(sys.argv) > 2:
 	t = int(sys.argv[2])
 
+#height of each partition
 height = int(N/size)
 
 #used later (larger scope for speed)
@@ -40,7 +41,7 @@ def new_state(state, index):
 	if state == 0:
 		if random.randint(1, 501) < 2:
 			return 2
-		elif index < 7:
+		elif index < 6:
 			return 0
 		elif index < 17:
 			return 1
@@ -48,7 +49,7 @@ def new_state(state, index):
 			return 3
 
 	elif state == 1:
-		if random.randint(1, 501) < 2:
+		if random.randint(1, 501) < 2 or index > 16:
 			return 3
 		elif index < 1:
 			return 0
@@ -56,7 +57,10 @@ def new_state(state, index):
 			return 1
 		
 	elif state == 2:
-		return random.choice([2,2,1,1,0])
+		if index > 20:
+			return 3
+		else:
+			return random.choice([2,2,1,1,0])
 		
 
 	else:
